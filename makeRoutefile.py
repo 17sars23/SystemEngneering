@@ -2,79 +2,30 @@
 #StudentNumber:2180104019
 #author:Juna Kawagishi
 
-import queue
+import random
 import sys
 
-G = [{}]
-fixed = {} #各点への最短距離を格納するリスト
-via = [[]] #各点への最短経路を格納するリスト
-src, dst = 0, 0 #始点，終点
+adj = [[]] # 隣接リスト
 
-def setNode(n):
-  global G,via
-  G = [{} for i in range(n)]
-  via = [[] for i in range(n)]
+#隣接リストを作成 -------------------------------------------
+#辺の総数(r)に達するまで各ノードに連結相手を1つ決めるサイクルを回すことで連結性を保証
+#----------------------------------------------------------
+def setAdjacentList(n,r):
+    global adj
+    adj = [[] for i in range(n)]
 
+    while r > 0:
+        for i in range(n):
+            a = random.randrange(n)
+            if not a in adj[i] and a != i: #重複を除去
+                adj[i].append(a)
+                adj[a].append(i)
 
-#問B1&3.5:データを格納する関数 ----------------------------------
-def setData(inputDataTextfile):
-    global G, src, dst
-
-    with open(inputDataTextfile) as f:
-        for i,line in enumerate(f):
-            if i==0:
-                n,m = map(int,line.split())
-                setNode(n)
-            elif i==m+1:
-                src, dst = map(int,line.split())
-            else:
-                s,t,w = map(int,line.split())
-                G[s][t] = w
-                G[t][s] = w
-
-
-#問B2&3.5:ダイクストラ本体の関数 ---------------------------------
-def solve():
-    global G,fixed,via
-
-    print("Start:",src,"\nGoal:",dst)
-
-    q = queue.PriorityQueue()
-    q.put((0,src,0))
-
-    while len(fixed) != len(G):
-        w,x,v = q.get()
-        if x == dst: print("minimum_distance:",w) #終点までの最短距離を出力
-        if x in fixed: continue;
-
-        fixed[x] = w
-        via[x].append(v)
-        via[x].append(x)
-        for y in G[x]:
-            if (y in fixed) == False:
-                q.put((w + G[x][y], y, x))
-
-
-#問B3&3.5:ダイクストラの計算結果をわかりやすく表示 -------------------
-def showGraph():
-
-    print("\n-------Graph--------")
-    for pre,num in via:
-        if num == dst: print("[minimum_Path] ", end="")
-
-        if pre == src:
-            if num == src: continue;
-            print(num,":",pre,"->",num,"(distance:",fixed[num],")")
+            if sum(len(k) for k in adj) >= r:
+                break
         else:
-            path = [num]
-            while pre != src:
-                path.insert(0,pre)
-                pre, _ = via[pre]
-
-            print(num, ":", src, end="")
-            for i in path:
-                print(" ->", i, end="")
-            print(" (distance:",fixed[num],")")
+            continue;
+        break
 
 
 
@@ -99,5 +50,24 @@ if __name__ == "__main__":
         print("Enter the n, min and max.")
         sys.exit()
 
-    n, min, max = argvs[1:]
-    print(n,min,max)
+    n, min, max = map(int, argvs[1:])
+    r = random.randrange(2*n, n*(n-1),2) #辺の数はn~nC2までに制限
+
+    outputfilePath = "route.txt"
+    f = open(outputfilePath, "w")
+    f.write(str(n) + " " + str(int(0.5*r)) + "\n")
+
+    #隣接リスト作成
+    setAdjacentList(n,r)
+    print(r,adj)
+
+    #output
+    for a, v in enumerate(adj):
+        for b in v:
+            if a < b:
+                weight = random.randrange(min, max)
+                f.write(str(a) + " " + str(b) + " " + str(weight) + "\n")
+            else:
+                continue;
+
+    f.close()
