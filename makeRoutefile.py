@@ -59,7 +59,6 @@ if __name__ == "__main__":
 
     #隣接リスト作成
     setAdjacentList(n,r)
-    print(r,adj)
 
     #output
     for a, v in enumerate(adj):
