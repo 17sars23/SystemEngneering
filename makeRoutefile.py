@@ -81,30 +81,23 @@ def showGraph():
 if __name__ == "__main__":
 
     """
-    コマンドライン引数に非負辺重み付き有向グラフのデータが格納されたroute.txtをとる
-    >> python3 dijkstra.py route.txt
+    非負辺重み付き有向グラフのデータが格納されたroute.txtを作成する
+    >> python3 makeRourefile.py n(ノード数) min(重みの最小値) max(重みの最大値)
 
-    ▽入力データ(route.txt)の中身
+    ▽作成するデータ(route.txt)の構成
     N(ノード数) R(辺,エッジ数)
     A1 B1 L1(点A1,点B1を結ぶ辺の重み)
     A2 B2 L2
     ...
     AR BR LR
-    S(始点) T(終点) <-問B3.5のため
     """
 
     argvs = sys.argv
     argc = len(argvs)
 
-    if argc != 2:
-        print("Specify graph data as an argument.")
+    if argc != 4:
+        print("Enter the n, min and max.")
         sys.exit()
 
-    #入力テキストデータをもとに格納
-    setData(argvs[1])
-
-    #ダイクストラの実装
-    solve()
-
-    #ダイクストラの結果をわかりやすく表示
-    showGraph()
+    n, min, max = argvs[1:]
+    print(n,min,max)

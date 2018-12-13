@@ -25,8 +25,8 @@ def setData(inputDataTextfile):
             if i==0:
                 n,m = map(int,line.split())
                 setNode(n)
-            elif i==m+1:
-                src, dst = map(int,line.split())
+            #elif i==m+1:
+                #src, dst = map(int,line.split())
             else:
                 s,t,w = map(int,line.split())
                 G[s][t] = w
@@ -37,10 +37,8 @@ def setData(inputDataTextfile):
 def solve():
     global G,fixed,via
 
-    print("Start:",src,"\nGoal:",dst)
-
     q = queue.PriorityQueue()
-    q.put((0,src,0))
+    q.put((0,src,src))
 
     while len(fixed) != len(G):
         w,x,v = q.get()
@@ -90,7 +88,7 @@ if __name__ == "__main__":
     A2 B2 L2
     ...
     AR BR LR
-    S(始点) T(終点) <-問B3.5のため
+    #S(始点) T(終点)
     """
 
     argvs = sys.argv
@@ -102,6 +100,12 @@ if __name__ == "__main__":
 
     #入力テキストデータをもとに格納
     setData(argvs[1])
+
+    #問3.5:始点と終点の指定
+    print("Start:", end="")
+    src = int(input())
+    print("Goal:", end="")
+    dst = int(input())
 
     #ダイクストラの実装
     solve()
