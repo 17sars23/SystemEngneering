@@ -36,13 +36,17 @@ def setData(inputDataTextfile):
 #問B2&3.5:ダイクストラ本体の関数 ---------------------------------
 def solve():
     global G,fixed,via
+    min_d = 1000000
 
     q = queue.PriorityQueue()
     q.put((0,src,src))
 
     while len(fixed) != len(G):
         w,x,v = q.get()
-        if x == dst: print("minimum_distance:",w) #終点までの最短距離を出力
+        if x == dst:
+            if min_d < w: continue;
+            min_d = w
+            print("minimum_distance:",min_d) #終点までの最短距離を出力
         if x in fixed: continue;
 
         fixed[x] = w
